@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Health Overview</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            width: 80px;
+            background-color: white;
+            transition: all 0.3s;
+        }
+        .sidebar-icon {
+            color: #6c757d;
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.2s;
+        }
+        .sidebar-icon:hover {
+            color: #0d6efd;
+            transform: scale(1.1);
+        }
+        .metric-card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .right-panel {
+            background-color: #212529;
+            color: white;
+            width: 450px;
+        }
+        @media (max-width: 992px) {
+            .right-panel {
+                width: 100%;
+            }
+        }
+        .progress-indicator {
+            height: 8px;
+            border-radius: 4px;
+        }
+        .health-status {
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .chart-container {
+            position: relative;
+        }
+        .small-chart {
+            height: 100px !important;
+            width: 100% !important;
+        }
+        .large-chart {
+            height: 250px !important;
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <!-- Sidebar -->
+        <div class="sidebar d-flex flex-column align-items-center py-4">
+            <img alt="Logo" class="mb-4" height="50" src="https://storage.googleapis.com/a1aa/image/-ICtD-wlWABIYJgy1-hknZ4BSuYmZ-BRR4Alj2a4IkI.jpg" width="50"/>
+            <div class="d-flex flex-column align-items-center">
+                <a href="#" class="sidebar-icon"><i class="fas fa-th-large"></i></a>
+                <a href="#" class="sidebar-icon"><i class="far fa-calendar-alt"></i></a>
+                <a href="#" class="sidebar-icon"><i class="far fa-clock"></i></a>
+                <a href="#" class="sidebar-icon"><i class="fas fa-cog"></i></a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col">
+            <!-- Header -->
+            <header class="d-flex justify-content-between align-items-center p-3 bg-white shadow-sm mb-3">
+                <div>
+                    <h1 class="h4 mb-0 fw-semibold">Health Overview</h1>
+                    <p class="text-muted small mb-0">August 12, 2021</p>
+                </div>
+                <div class="d-flex gap-3">
+                    <button class="btn btn-link text-muted p-0"><i class="fas fa-search fs-5"></i></button>
+                    <button class="btn btn-link text-muted p-0 position-relative">
+                        <i class="fas fa-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="row g-3">
+                <!-- Left Content -->
+                <div class="col-lg-8">
+                    <!-- Health Metrics -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="metric-card p-3 bg-white">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="text-warning">
+                                        <i class="fas fa-tint fs-2"></i>
+                                    </div>
+                                    <div class="text-end">
+                                        <p class="text-muted small mb-0">Blood Sugar</p>
+                                        <h3 class="h5 mb-0 fw-semibold">80 <small class="text-muted fs-6">mg/dL</small></h3>
+                                        <span class="badge bg-success bg-opacity-10 text-success health-status">Normal</span>
+                                    </div>
+                                </div>
+                                <div class="chart-container small-chart">
+                                    <canvas id="bloodSugarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="metric-card p-3 bg-white">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="text-danger">
+                                        <i class="fas fa-heartbeat fs-2"></i>
+                                    </div>
+                                    <div class="text-end">
+                                        <p class="text-muted small mb-0">Heart Rate</p>
+                                        <h3 class="h5 mb-0 fw-semibold">98 <small class="text-muted fs-6">bpm</small></h3>
+                                        <span class="badge bg-success bg-opacity-10 text-success health-status">Normal</span>
+                                    </div>
+                                </div>
+                                <div class="chart-container small-chart">
+                                    <canvas id="heartRateChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="metric-card p-3 bg-white">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="text-primary">
+                                        <i class="fas fa-tint fs-2"></i>
+                                    </div>
+                                    <div class="text-end">
+                                        <p class="text-muted small mb-0">Blood Pressure</p>
+                                        <h3 class="h5 mb-0 fw-semibold">102 <small class="text-muted fs-6">/ 72 mmHg</small></h3>
+                                        <span class="badge bg-success bg-opacity-10 text-success health-status">Normal</span>
+                                    </div>
+                                </div>
+                                <div class="chart-container small-chart">
+                                    <canvas id="bloodPressureChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Growth -->
+                    <div class="metric-card p-4 bg-white mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="h5 fw-semibold mb-0">Activity Growth</h2>
+                            <select class="form-select form-select-sm w-auto">
+                                <option>Jan 2021</option>
+                                <option>Dec 2020</option>
+                                <option>Nov 2020</option>
+                            </select>
+                        </div>
+                        <div class="chart-container large-chart">
+                            <canvas id="activityGrowthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel -->
+                <div class="col-lg-4">
+                    <div class="right-panel p-4 h-100 rounded-3">
+                        <!-- BMI Calculator -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h2 class="h5 fw-semibold mb-0">BMI Calculator</h2>
+                                <select class="form-select form-select-sm bg-dark text-white border-dark w-auto">
+                                    <option>Last Week</option>
+                                    <option>Last Month</option>
+                                    <option>Last Year</option>
+                                </select>
+                            </div>
+                            <div class="bg-dark p-3 rounded-3 mb-3">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Height</span>
+                                        <span>170 cm</span>
+                                    </div>
+                                    <div class="progress progress-indicator">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Weight</span>
+                                        <span>72 kg</span>
+                                    </div>
+                                    <div class="progress progress-indicator">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Body Mass Index (BMI)</span>
+                                    <span>24.9</span>
+                                </div>
+                                <div class="text-center py-1 rounded-pill bg-success fw-medium">You're Healthy</div>
+                            </div>
+                        </div>
+
+                        <!-- Body Measurements -->
+                        <div>
+                            <h2 class="h5 fw-semibold mb-2">Body Measurements</h2>
+                            <p class="text-muted small mb-3">Last checked 2 Days Ago</p>
+                            <div class="bg-dark p-3 rounded-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-secondary">
+                                    <span>Chest (in)</span>
+                                    <span>44.5 <i class="fas fa-arrow-up text-danger ms-1"></i></span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-secondary">
+                                    <span>Waist (in)</span>
+                                    <span>34 <i class="fas fa-arrow-down text-success ms-1"></i></span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center py-2">
+                                    <span>Hip (in)</span>
+                                    <span>42.5 <i class="fas fa-arrow-up text-danger ms-1"></i></span>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <img alt="Body Shape" class="img-fluid rounded-3" src="https://storage.googleapis.com/a1aa/image/6OIvnSQMSP_JTR0HvvNY9bHmdDJ4ROcwaiHvu_tfWmQ.jpg"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Blood Sugar Chart
+    const bloodSugarCtx = document.getElementById('bloodSugarChart').getContext('2d');
+    new Chart(bloodSugarCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            datasets: [{
+                label: 'Blood Sugar',
+                data: [80, 85, 78, 90, 88, 82, 80],
+                borderColor: 'rgba(255, 193, 7, 1)',
+                backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                },
+                x: {
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Heart Rate Chart
+    const heartRateCtx = document.getElementById('heartRateChart').getContext('2d');
+    new Chart(heartRateCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            datasets: [{
+                label: 'Heart Rate',
+                data: [98, 100, 95, 102, 99, 97, 98],
+                borderColor: 'rgba(220, 53, 69, 1)',
+                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                },
+                x: {
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Blood Pressure Chart
+    const bloodPressureCtx = document.getElementById('bloodPressureChart').getContext('2d');
+    new Chart(bloodPressureCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            datasets: [{
+                label: 'Blood Pressure',
+                data: [102, 105, 100, 110, 108, 104, 102],
+                borderColor: 'rgba(13, 110, 253, 1)',
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                },
+                x: {
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Activity Growth Chart
+    const activityGrowthCtx = document.getElementById('activityGrowthChart').getContext('2d');
+    new Chart(activityGrowthCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan 1', 'Jan 2', 'Jan 3', 'Jan 4', 'Jan 5', 'Jan 6', 'Jan 7'],
+            datasets: [
+                {
+                    label: 'Aerobics',
+                    data: [20, 30, 40, 50, 60, 70, 80],
+                    backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                    borderColor: 'rgba(220, 53, 69, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Yoga',
+                    data: [30, 40, 50, 60, 70, 80, 90],
+                    backgroundColor: 'rgba(13, 110, 253, 0.2)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Meditation',
+                    data: [40, 50, 60, 70, 80, 90, 100],
+                    backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                    borderColor: 'rgba(255, 193, 7, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 20
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

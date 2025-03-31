@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet and Meals</title>
+    <style>
+        /* General Styles */
+        :root {
+            --primary-color: #48bb78;
+            --primary-light: #9ae6b4;
+            --primary-dark: #2f855a;
+            --secondary-color: #68d391;
+            --accent-color: #81e6d9;
+            --success-color: #38a169;
+            --dark-color: #2d3748;
+            --light-color: #f7fafc;
+            --text-color: #4a5568;
+            --gradient-primary: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            --gradient-accent: linear-gradient(135deg, #81e6d9 0%, #4fd1c5 100%);
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark-color);
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .home-icon img {
+            width: 50px; 
+            height: 50px;
+            border-radius: 30px;
+            margin-left: 350px;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            width: 50%; 
+            height: 40px; 
+            font-size: 16px; 
+            padding: 1px 2px; 
+            display: block;
+            margin: 0 auto; 
+            text-align: center; 
+            border: 2px solid var(--primary-dark);
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Categories */
+        .category {
+            margin: 30px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        /* Card Grid */
+        .grid {
+            display: flex;
+            gap: 25px;
+        }
+
+        /* Cards */
+        .card {
+            width: 30%;
+            height: 200px;
+            position: relative;
+            border-radius: 10px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+            background: var(--primary-color);
+        }
+
+        .card img {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            width: 200px;
+            transform: rotate(-20deg);
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+            border-radius: 30px;
+        }
+
+        .card:hover img {
+            transform: rotate(-10deg) scale(1.1); 
+        }
+
+        .card:hover {
+            transform: scale(1.05); 
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("UI Loaded Successfully!");
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="search-container">
+            <a href="Homepage/index.html" class="home-icon">
+                <img src="./diet images/House.jpg" alt="Home">
+            </a>
+        </div>
+        <input type="text" class="search-bar" placeholder="SEARCH HERE">
+    </header>
+
+    <main>
+        <section class="category">
+            <h2>Start browsing</h2>
+            <div class="grid">
+                <div class="card">
+                    <span>BREAKFAST</span>
+                    <img src="./diet images/breakfast.jpg" alt="Breakfast">
+                </div>
+                <div class="card">
+                    <span>LUNCH & DINNER</span>
+                    <img src="./diet images/lunch.jpg" alt="Lunch-Dinner">
+                </div>
+                <div class="card">
+                    <span>SMOOTHIES</span>
+                    <img src="./diet images/smoothies.jpg" alt="Smoothies">
+                </div>
+            </div>
+        </section>
+
+        <section class="category">
+            <h2>Browse all Diet Plans</h2>
+            <div class="grid">
+                <div class="card">
+                    <span>LOW CARB</span>
+                    <img src="./diet images/lowcarb.jpg" alt="Low-Carb">
+                </div>
+                <div class="card">
+                    <span>VEGAN</span>
+                    <img src="./diet images/vegan.jpg" alt="Vegan">
+                </div>
+                <div class="card">
+                    <span>GLUTEN FREE</span>
+                    <img src="./diet images/gluten free.jpg" alt="Gluten-Free">
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
